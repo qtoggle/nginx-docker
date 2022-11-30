@@ -29,6 +29,6 @@ jobs:
         with:
           push: true
           build-args:
-            - NGINX_VERSION: ${{ steps.tags.outputs.version }}
+            - NGINX_VERSION=${{ steps.tags.outputs.version }}
           tags: ${{ steps.tags.outputs.tags }}
           labels: ${{ steps.tags.outputs.labels }}
