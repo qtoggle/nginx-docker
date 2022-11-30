@@ -28,7 +28,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          build-args:
-            - NGINX_VERSION=${{ steps.tags.outputs.version }}
+          build-args: NGINX_VERSION=${{ steps.tags.outputs.version }}
           tags: ${{ steps.tags.outputs.tags }}
           labels: ${{ steps.tags.outputs.labels }}
