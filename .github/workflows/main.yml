@@ -1,0 +1,34 @@
+name: Main
+
+on: push
+
+jobs:
+  build:
+    name: Build
+    if: startsWith(github.ref, 'refs/tags/version-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Generate Docker tags
+        id: tags
+        uses: docker/metadata-action@v4
+        with:
+          images: qtoggle/nginx
+          tags: type=match,pattern=version-(.*),group=1
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          build-args:
+            - NGINX_VERSION: ${{ steps.tags.outputs.version }}
+          tags: ${{ steps.tags.outputs.tags }}
+          labels: ${{ steps.tags.outputs.labels }}
